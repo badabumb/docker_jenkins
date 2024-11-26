@@ -1,40 +1,11 @@
 services:
-  frontend:
-    image: nginx:latest
-    container_name: frontend_jenkins
-    ports:
-      - "80:80"
-    volumes:
-      - ./frontend:/usr/share/nginx/html
-    networks:
-      - app-network
-
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: backend_jenkins
-    working_dir: /app
-    volumes:
-      - ./backend:/app
+  jenkins:
+    build: .
+    container_name: jenkins
     ports:
       - "5004:5000"
-    networks:
-      - app-network
-
-  db:
-    image: mysql:8.0
-    container_name: db_jenkins
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: demo
     volumes:
-      - db_data:/var/lib/mysql
-    networks:
-      - app-network
-
+      - jenkins_home:/var/jenkins_home
+# тома, которые будут использовать сервисы
 volumes:
-  db_data:
-
-networks:
-  app-network:
+  jenkins_home: # название тома для хранения данных jenkins
