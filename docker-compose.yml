@@ -1,8 +1,7 @@
-version: "3.8"
 services:
   frontend:
     image: nginx:latest
-    container_name: frontend
+    container_name: frontend_jenkins
     ports:
       - "80:80"
     volumes:
@@ -11,18 +10,21 @@ services:
       - app-network
 
   backend:
-    image: python:3.12-slim
-    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend_jenkins
     working_dir: /app
     volumes:
       - ./backend:/app
-    command: python3 app.py
+    ports:
+      - "5004:5000"
     networks:
       - app-network
 
   db:
     image: mysql:8.0
-    container_name: db
+    container_name: db_jenkins
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: demo
